@@ -1,0 +1,6 @@
+
+API issues:
+
+sending tx signed offline to blockchain
+nonce: web3.utils.toHex(web3.eth.getTransactionCount(callerAddress, 'pending')),
+latest block.gasLimit

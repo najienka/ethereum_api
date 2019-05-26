@@ -32,16 +32,11 @@ module.exports = function (web3) {
   module.call = async function (contractName, contractAddress, callerAddress, method, args) {
     var promise = new Promise((resolve, reject) => {
       var result = {}
-
       var contractAbi = module.getContractAbi(contractName)
-      
-
       try {
         var contractInstance = new web3.eth.Contract(contractAbi, contractAddress)
-       
-
         result = contractInstance.methods[method].apply(this, Object.values(args))
-
+        // call view function
         contractInstance.methods[method].apply(this, Object.values(args)).call({from: callerAddress}, (error, result) => {
           if(error){
             return reject(error);
@@ -56,7 +51,6 @@ module.exports = function (web3) {
         return reject(err)
       }
     })
-
     return promise
   }
 
@@ -64,12 +58,9 @@ module.exports = function (web3) {
   module.getEvent = function (contractName, contractAddress, from_block) {
     var promise = new Promise((resolve, reject) => {
       var result = {}
-
       var contractAbi = module.getContractAbi(contractName)
-      
       try {
-      
-       // var Contract = new web3.eth.contract(contractAbi, contractAddress)
+        // var Contract = new web3.eth.contract(contractAbi, contractAddress)
         // initiate contract for an address
         var contractInstance = new web3.eth.Contract(contractAbi, contractAddress)
 
@@ -79,9 +70,7 @@ module.exports = function (web3) {
       }, function(error, events){ console.log(events); })
       .then(function(events){
           console.log(events) // same results as the optional callback above
-      });
-        
-        return resolve(events) */
+      }); */
       
         contractInstance.getPastEvents('allEvents', {
           fromBlock: from_block,
@@ -97,7 +86,6 @@ module.exports = function (web3) {
               last_block: events[events.length - 1].blockNumber,
               events,
             };
-
             return resolve(result);
           } else {
             const result = {
@@ -109,7 +97,6 @@ module.exports = function (web3) {
               last_block: from_block,
               events: [],
             };
-
             return resolve(result);
           }
         });
@@ -142,7 +129,6 @@ module.exports = function (web3) {
         var contractInstance = new web3.eth.Contract(contractAbi, contractAddress)
         // get the reference to the contract method, with the corresponding parameters
         const contractFunction = contractInstance.methods[method].apply(this, Object.values(args)).encodeABI();
-
         var privateKeyBuff = Buffer.from(privateKey, 'hex')
 
         // get the current gas price, either from config or from the node
@@ -171,23 +157,20 @@ module.exports = function (web3) {
         }
         // create the Tx
         var tx = new Tx(rawTx)
-        // see the fees required for the Tx
+        // estimate the fees required for the Tx
         if (gasLimit === 'auto') {
           console.log('Auto calculating gas limit...')
-
           //var block = web3.eth.getBlock("latest");
-
           gasLimit = web3.utils.toHex(41000)
           console.log('Estimated gas: ' + gasLimit)
           //console.log('Estimated gas: ' + block.gasLimit)
-          tx.gasLimit = block.gasLimit
+          //tx.gasLimit = block.gasLimit
+          tx.gasLimit = gasLimit
         }
         // sign the transaction
         tx.sign(privateKeyBuff)
-
         var serializedTx = tx.serialize()
         var raw = '0x' + serializedTx.toString('hex')
-        
       } catch (err) {
         console.log('Error preparing the Contract transact Tx.')
         console.log(err)
@@ -195,7 +178,7 @@ module.exports = function (web3) {
       }
 
       try {
-        // now send the signed serialized transaction to the node
+        // send the signed serialized transaction to the node
         web3.eth.sendSignedTransaction(raw, (err, txHash) => {
           if (err) {
             return reject(err)
