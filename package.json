@@ -1,0 +1,30 @@
+{
+  "name": "ethereum_api",
+  "author": "n ajienka",
+  "version": "1.0.0",
+  "license": "",
+  "description": "Ethereum Node API. Interacting with Public/Private ethereum network via a RESTful API.",
+  "main": "api.js",
+  "scripts": {
+    "postinstall": "node postinstall.js",
+    "start": "node api",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "commander": "^2.11.0",
+    "dotenv": "^4.0.0",
+    "ethereumjs-tx": "^1.3.3",
+    "ethereumjs-util": "^5.1.2",
+    "express": "^4.16.2",
+    "web3": "^1.0.0-beta.36"
+  },
+  "devDependencies": {
+    "eslint": "^4.14.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
