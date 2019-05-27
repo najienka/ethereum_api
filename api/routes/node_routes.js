@@ -5,7 +5,7 @@ module.exports = function (app, web3) {
   const contractSrv = require('../../services/ethnode/contract')(web3)
 
   // general
-  app.get('/node/status', (req, res) => { 
+  app.get('/node/status', (req, res) => {
     // get the geth node or ethereum blockchain client status
     // curl http://localhost:3000/node/status
     generalSrv.getStatus()
@@ -42,55 +42,57 @@ module.exports = function (app, web3) {
       })
   })
 
-  app.get('/node/gasLimit', (req, res) => { 
+  app.get('/node/gasLimit', (req, res) => {
 
     txSrv.getGasLimit()
       .then(function (txResult) {
-        res.send({ data: txResult})
+        res.send({ data: txResult })
       }, function (err) {
         res.send({ error: err })
       })
   })
 
-  app.get('/node/latestBlock', (req, res) => { 
+  app.get('/node/latestBlock', (req, res) => {
 
     txSrv.getLastBlock()
       .then(function (latestBlock) {
-        res.send({ data: latestBlock})
+        res.send({ data: latestBlock })
       }, function (err) {
         res.send({ error: err })
       })
 
   })
 
-  app.get('/node/block/:blockNumber', (req, res) => { 
+  app.get('/node/block/:blockNumber', (req, res) => {
     var blockNumber = req.params.blockNumber
 
     txSrv.getBlock(blockNumber)
       .then(function (block) {
-        res.send({ data: block})
+        res.send({ data: block })
       }, function (err) {
         res.send({ error: err })
       })
   })
 
   // address
-  app.get('/node/address/:address/balance', (req, res) => { 
+  app.get('/node/address/:address/balance', (req, res) => {
     // get the ether balance of an address
     // curl http://localhost:3000/node/address/0x5dde6118d4b7a810e388e3926e77e5039765acf2/balance
     var address = req.params.address
 
     addressSrv.getBalance(address)
       .then(function (result) {
-        res.send({ data: 
-                    {balance: result.value }})
+        res.send({
+          data:
+            { balance: result.value }
+        })
       }, function (err) {
         res.send({ error: err })
       })
   })
 
   // transactions
-  app.get('/node/tx/:txhash', (req, res) => { 
+  app.get('/node/tx/:txhash', (req, res) => {
     // get the details/properties of a transaction hash 
     // i.e., hash, nonce, blockHash, blockNumber, transactionIndex, from, to, value, gas, gasPrice, input
     // e.g., https://medium.com/blockchannel/life-cycle-of-an-ethereum-transaction-e5c66bae0f6e
@@ -98,20 +100,20 @@ module.exports = function (app, web3) {
     var txhash = req.params.txhash
     txSrv.get(txhash)
       .then(function (txResult) {
-        res.send({ data: txResult})
+        res.send({ data: txResult })
       }, function (err) {
         res.send({ error: err })
       })
 
   })
 
-  app.get('/node/tx/receipt/:txhash', (req, res) => { 
+  app.get('/node/tx/receipt/:txhash', (req, res) => {
     // get a transaction receipt with the hash
     // e.g., curl http://localhost:3000/node/tx/receipt/0x86b1f328eb5e79fe3ebaa6a42f8931d99b0182683287893a70460fcd8894fc88
     var txhash = req.params.txhash
     txSrv.getTransactionReceipt(txhash)
       .then(function (txReceipt) {
-        res.send({ data: txReceipt})
+        res.send({ data: txReceipt })
       }, function (err) {
         res.send({ error: err })
       })
@@ -161,7 +163,7 @@ module.exports = function (app, web3) {
     var method = req.params.method
     var contractName = req.params.name
     var caller = req.params.caller
-    
+
     contractSrv.call(contractName, address, caller, method, req.query)
       .then(function (result) {
         var response = {

@@ -6,11 +6,11 @@ module.exports = function (web3) {
 
   module.get = async function (txhash) {
     var promise = new Promise((resolve, reject) => {
-/* 
-      if (!serializedTx.startsWith('0x')) {
-        serializedTx = '0x' + serializedTx
-      }
- */
+      /* 
+            if (!serializedTx.startsWith('0x')) {
+              serializedTx = '0x' + serializedTx
+            }
+       */
       web3.eth.getTransaction(txhash, (err, result) => {
         if (err) {
           return reject(err)
@@ -29,15 +29,15 @@ module.exports = function (web3) {
               serializedTx = '0x' + serializedTx
             }
        */
-            web3.eth.getTransactionReceipt(txhash, (err, result) => {
-              if (err) {
-                return reject(err)
-              } else {
-                return resolve(result)
-              }
-            })
-          })
-          return promise
+      web3.eth.getTransactionReceipt(txhash, (err, result) => {
+        if (err) {
+          return reject(err)
+        } else {
+          return resolve(result)
+        }
+      })
+    })
+    return promise
   }
 
   module.getLastBlock = async function () {
@@ -47,15 +47,15 @@ module.exports = function (web3) {
               serializedTx = '0x' + serializedTx
             }
        */
-            web3.eth.getBlock("latest", (err, result) => {
-              if (err) {
-                return reject(err)
-              } else {
-                return resolve(result)
-              }
-            })
-          })
-          return promise
+      web3.eth.getBlock("latest", (err, result) => {
+        if (err) {
+          return reject(err)
+        } else {
+          return resolve(result)
+        }
+      })
+    })
+    return promise
   }
 
   module.getBlock = async function (blockNumber) {
@@ -66,15 +66,15 @@ module.exports = function (web3) {
               serializedTx = '0x' + serializedTx
             }
        */
-            web3.eth.getBlock(blockNumber, (err, result) => {
-              if (err) {
-                return reject(err)
-              } else {
-                return resolve(result)
-              }
-            })
-          })
-          return promise
+      web3.eth.getBlock(blockNumber, (err, result) => {
+        if (err) {
+          return reject(err)
+        } else {
+          return resolve(result)
+        }
+      })
+    })
+    return promise
   }
 
   module.getGasLimit = async function () {
@@ -84,18 +84,18 @@ module.exports = function (web3) {
               serializedTx = '0x' + serializedTx
             }
        */
-            web3.eth.getBlock("latest", (err, result) => {
-              if (err) {
-                return reject(err)
-              } else {
-                return resolve(result.gasLimit)
-              }
-            })
-          })
-          return promise
+      web3.eth.getBlock("latest", (err, result) => {
+        if (err) {
+          return reject(err)
+        } else {
+          return resolve(result.gasLimit)
+        }
+      })
+    })
+    return promise
   }
-  
- 
+
+
   /**
    * Send ether (wei) from an account to another
    * @param {string} from Address of the sender
@@ -151,12 +151,12 @@ module.exports = function (web3) {
         //tx.gasLimit = web3.utils.toHex(gasLimit)
 
         console.log('Auto calculating gas limit...')
-          //var block = web3.eth.getBlock("latest");
-          gasLimit = web3.utils.toHex(41000)
-          console.log('Estimated gas: ' + gasLimit)
-          //console.log('Estimated gas: ' + block.gasLimit)
-          //tx.gasLimit = block.gasLimit
-          tx.gasLimit = gasLimit
+        //var block = web3.eth.getBlock("latest");
+        gasLimit = web3.utils.toHex(41000)
+        console.log('Estimated gas: ' + gasLimit)
+        //console.log('Estimated gas: ' + block.gasLimit)
+        //tx.gasLimit = block.gasLimit
+        tx.gasLimit = gasLimit
       }
       tx.sign(privateKey)
 
