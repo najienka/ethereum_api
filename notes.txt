@@ -1,0 +1,26 @@
+
+API issues:
+
+nonce and latest block gasLimit in contract and tx transaction creation
+nonce: web3.utils.toHex(web3.eth.getTransactionCount(callerAddress, 'pending')),
+gasLimit: web3.eth.getBlock("latest").gasLimit
+web3.isConnected() in getStatus
+
+
+
+curl http://localhost:3000/node/status
+
+
+
+
+// send ether tx 
+
+curl --header "Content-Type: application/json"       --request POST       --data '{"from": "0x390493af6a094564b666dfbd3b5f28c65e445673","private_key": "cf7ba8265e1ba62dd3d330359d472071c5a973acce4837c3278544ed1638cbaf","to": "0x3b974a364df5d93be68e4e6fc1e8d3c6af9eff9c","wei": "1000000000","gas_price": "100000000000"}'       http://localhost:3000/node/tx/
+
+
+//contract function call tx
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"caller_address": "0x390493af6a094564b666dfbd3b5f28c65e445673","private_key": "cf7ba8265e1ba62dd3d330359d472071c5a973acce4837c3278544ed1638cbaf","args": {"receiver": "0x3b974a364df5d93be68e4e6fc1e8d3c6af9eff9c", "amount":"50"}}' \
+  http://localhost:3000/node/contract/tracrToken/0x066f5e44fe7bdbcc76be11b142c646af86900abe/transact/transfer
