@@ -1,19 +1,33 @@
 module.exports = function (web3) {
   var module = {}
 
-  module.getStatus = function () {
-    var result = {}
+  module.getStatus = async function () {
 
-    //result.connected = web3.isConnected()
-    result.version = web3.version;
-    //if (web3.isConnected()) {
-    if(web3.version){
-      // coinbase info
-      result.coinbase = web3.eth.accounts[0]
-      result.coinbase_balance = web3.eth.getBalance(result.coinbase)//.toNumber()
+    /* web3.eth.getAccounts((error, accounts) => {
+      console.log(accounts)
+    }) */
+
+    /* web3.eth.getBalance(accounts[0], 'pending').then((balance) => {
+        conosle.log(balance)
+    } */
+
+    var promise = new Promise((resolve, reject) => {
+    try {
+      web3.eth.getAccounts( (err, accounts) => {
+        if (err) {
+          return reject(err)
+        } else {
+          //console.log(accounts)
+          return resolve({ value: accounts })
+        }
+      })
+    } catch (err) {
+      console.log('getAccounts from node error.')
+      console.log(err)
+      return reject(err)
     }
-
-    return result
+  })
+  return promise
   }
 
 

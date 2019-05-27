@@ -31,11 +31,11 @@ You'll see a message indicating that the service is already running.
 
 * GET `/node/status`
 
-  Get the status of the server and the network/connection
+  Get the list of accounts in connected blockchain client
   
 * GET `/node/address/:address/balance`
 
-  Get the ether balance of an account 
+  Get the ether balance of an account in wei
 
 * GET `/node/tx/:txhash`
 
@@ -47,7 +47,7 @@ You'll see a message indicating that the service is already running.
   
 * POST `/node/tx/`
 
-  Send ether (wei) from one account to another address
+  Send ether (wei) from one account to another address or send trnasaction signed offline
 
 * GET `/node/contract/:name/:address/call/:method`
 

@@ -8,9 +8,17 @@ module.exports = function (app, web3) {
   app.get('/node/status', (req, res) => { 
     // get the geth node or ethereum blockchain client status
     // curl http://localhost:3000/node/status
-    var status = generalSrv.getStatus()
-    
-    res.send({ data: status })
+    generalSrv.getStatus()
+      .then(function (output) {
+        var response = {
+          data: {
+            result: output
+          }
+        }
+        res.send(response)
+      }, function (err) {
+        res.send({ error: err.message })
+      })
   })
 
   app.get('/node/event/:contractName/:address/:fromBlock', (req, res) => {
@@ -35,22 +43,35 @@ module.exports = function (app, web3) {
   })
 
   app.get('/node/gasLimit', (req, res) => { 
-    var gasLimit = txSrv.getGasLimit()
 
-    res.send({ data: gasLimit })
+    txSrv.getGasLimit()
+      .then(function (txResult) {
+        res.send({ data: txResult})
+      }, function (err) {
+        res.send({ error: err })
+      })
   })
 
   app.get('/node/latestBlock', (req, res) => { 
-    var latestBlock = txSrv.getLastBlock()
 
-    res.send({ data: latestBlock })
+    txSrv.getLastBlock()
+      .then(function (latestBlock) {
+        res.send({ data: latestBlock})
+      }, function (err) {
+        res.send({ error: err })
+      })
+
   })
 
   app.get('/node/block/:blockNumber', (req, res) => { 
     var blockNumber = req.params.blockNumber
-    var block = txSrv.getBlock(blockNumber)
 
-    res.send({ data: block })
+    txSrv.getBlock(blockNumber)
+      .then(function (block) {
+        res.send({ data: block})
+      }, function (err) {
+        res.send({ error: err })
+      })
   })
 
   // address
@@ -61,7 +82,8 @@ module.exports = function (app, web3) {
 
     addressSrv.getBalance(address)
       .then(function (result) {
-        res.send({ data: result })
+        res.send({ data: 
+                    {balance: result.value }})
       }, function (err) {
         res.send({ error: err })
       })
@@ -74,28 +96,35 @@ module.exports = function (app, web3) {
     // e.g., https://medium.com/blockchannel/life-cycle-of-an-ethereum-transaction-e5c66bae0f6e
     // curl http://localhost:3000/node/tx/0x04ac096854ef6184c2de252ef24bad264429b72535f2283d8012dea6f6288c40
     var txhash = req.params.txhash
-    var txResult = txSrv.get(txhash)
+    txSrv.get(txhash)
+      .then(function (txResult) {
+        res.send({ data: txResult})
+      }, function (err) {
+        res.send({ error: err })
+      })
 
-    res.send({ data: txResult })
   })
 
   app.get('/node/tx/receipt/:txhash', (req, res) => { 
     // get a transaction receipt with the hash
     // e.g., curl http://localhost:3000/node/tx/receipt/0x86b1f328eb5e79fe3ebaa6a42f8931d99b0182683287893a70460fcd8894fc88
     var txhash = req.params.txhash
-    var txReceipt = txSrv.getTransactionReceipt(txhash)
-
-    res.send({ data: txReceipt })
+    txSrv.getTransactionReceipt(txhash)
+      .then(function (txReceipt) {
+        res.send({ data: txReceipt})
+      }, function (err) {
+        res.send({ error: err })
+      })
   })
 
   app.post('/node/tx/', (req, res) => {
     var rawTx = req.body.raw
-    // send ether from one address to another
+    // send ether from one address to another or send tx signed offline
     /** e.g,
      * curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"from": "0x59f6b3e21c3d568f5c5efc8ca1a099c7d51cd43c","private_key": "c23c38aff5bfbfa86fa6ac19b4730626b4d6b96440c90e4300f385d65853643e","to": "0x0821532dab2bdca2ab0e7062491135add99ab3eb","wei": "10000000000000000000","gas_price": "100000000000"}' \
-  http://localhost:3000/node/tx/
+      --request POST \
+      --data '{"from": "0x59f6b3e21c3d568f5c5efc8ca1a099c7d51cd43c","private_key": "c23c38aff5bfbfa86fa6ac19b4730626b4d6b96440c90e4300f385d65853643e","to": "0x0821532dab2bdca2ab0e7062491135add99ab3eb","wei": "10000000000000000000","gas_price": "100000000000"}' \
+      http://localhost:3000/node/tx/
      */
     if (typeof rawTx === 'undefined') {
       // separated-fields type of Tx
@@ -164,7 +193,6 @@ module.exports = function (app, web3) {
     var privateKey = req.body.private_key
     var callerAddress = req.body.caller_address
     var args = req.body.args
-    
 
     contractSrv.transact(contractName, contractAddress, method, callerAddress, privateKey, args)
       .then(function (result) {

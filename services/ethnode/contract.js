@@ -31,11 +31,10 @@ module.exports = function (web3) {
    */
   module.call = async function (contractName, contractAddress, callerAddress, method, args) {
     var promise = new Promise((resolve, reject) => {
-      var result = {}
+      //var result = {}
       var contractAbi = module.getContractAbi(contractName)
       try {
         var contractInstance = new web3.eth.Contract(contractAbi, contractAddress)
-        result = contractInstance.methods[method].apply(this, Object.values(args))
         // call view function
         contractInstance.methods[method].apply(this, Object.values(args)).call({from: callerAddress}, (error, result) => {
           if(error){
@@ -58,7 +57,8 @@ module.exports = function (web3) {
   module.getEvent = function (contractName, contractAddress, from_block) {
     var promise = new Promise((resolve, reject) => {
       var result = {}
-      var contractAbi = module.getContractAbi(contractName)
+      //using another async function in the same module
+      var contractAbi = module.getContractAbi(contractName) 
       try {
         // var Contract = new web3.eth.contract(contractAbi, contractAddress)
         // initiate contract for an address
@@ -121,7 +121,7 @@ module.exports = function (web3) {
    */
   module.transact = async function (contractName, contractAddress, method, callerAddress, privateKey, args) {
     var promise = new Promise((resolve, reject) => {
-      var result = {}
+      var result = {} // result inside promise in async function
 
       try {
         var contractAbi = module.getContractAbi(contractName)
