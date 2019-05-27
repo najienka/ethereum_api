@@ -2,8 +2,7 @@ Ethereum Blockchain and Smart Contract Interaction API
 ========================================================
 
 
-This module provides an API for an Ethereum node by using [web3](https://github.com/ethereum/web3.js/)
-[web3 documentation](https://web3js.readthedocs.io/en/1.0/index.html)
+This module provides an API for an Ethereum node by using [web3](https://github.com/ethereum/web3.js/). web3 documentation can be found here: [web3 documentation](https://web3js.readthedocs.io/en/1.0/index.html)
 
 Install
 -------
